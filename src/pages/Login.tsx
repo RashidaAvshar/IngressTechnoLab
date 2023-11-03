@@ -1,6 +1,33 @@
 import React from 'react'
+import { useState,useEffect } from 'react';
 
 const Login = () => {
+
+
+    const [showPassword,setShowPassword] = useState(false)
+    const [loginInfo,setLoginInfo] = useState({
+        name:'',
+        password: ''
+    })
+
+    const setloginInfoF =(e:any)=>{
+        setLoginInfo(prev=>({...prev,[e.target.name]:e.target.value}))
+        console.log(loginInfo)
+    }
+
+    function showPasswordF(e:any){
+        setShowPassword(!showPassword)
+    }
+
+    const [loginDataReady,setLoginDataReady] = useState(false)
+    
+
+    // useEffect(()=>{
+
+    //     loginInfo.name.length
+
+    // },[loginInfo])
+
     return <div>
 
 
@@ -16,14 +43,20 @@ const Login = () => {
               <form className="space-y-4 md:space-y-6 p-10" action="#">
                   <div>
                       
-                      <input type="email" name="email" id="email" className="w-full p-2.5 border-b-2 border-b-red-400 focus:border-red-600 focus:outline-none focus:border-b-4 mb-6" placeholder="UserName" required/>
+                      <input onChange={setloginInfoF} type="text" name="name" id="name" className={loginInfo.name.length>1? "w-full p-2.5 border-b-2 border-b-gray-400 focus:border-green-600 focus:outline-none focus:border-b-4 mb-6": "w-full p-2.5 border-b-2 border-b-red-400 focus:border-red-600 focus:outline-none focus:border-b-4 mb-6"} placeholder="UserName" required/>
                   </div>
-                  <div>
+                  <div className='flex items-center relative pb-8'>
                       
-                      <input type="password" name="password" id="password" placeholder="Password" className="w-full p-2.5 border-b-2 border-b-red-400 focus:border-red-600 focus:outline-none focus:border-b-4 mb-12" required/>
+                      <input onChange={setloginInfoF} type={showPassword?"text":"password"} name="password" id="password" placeholder="Password" className={loginInfo.password.length>1? "w-full p-2.5 border-b-2 border-b-gray-400 focus:border-green-600 focus:outline-none focus:border-b-4": "w-full p-2.5 border-b-2 border-b-red-400 focus:border-red-600 focus:outline-none focus:border-b-4 "} required/>
+                      {
+                        !showPassword?
+                        <i onClick={showPasswordF} className="fa-regular fa-eye absolute right-1" ></i>
+                        :
+                        <i onClick={showPasswordF} className="fa-regular fa-eye-slash absolute right-1"></i>
+                      }
                   </div>
               
-                  <button type="submit" className="w-full  text-white bg-gray-200 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-lg px-5 py-2  text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ">Sign in</button>
+                  <button type="submit" className="w-full  text-white disabled:bg-gray-200 bg-gray-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-lg px-5 py-2  text-center  " disabled = {loginInfo.name.length<1 || loginInfo.password.length<1 ? true:false}>Sign in</button>
                  
               </form>
           </div>
