@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
-const Uploadfile = () => {
+const New = () => {
     // const [age, setAge] = React.useState('');
 
     // const handleChange = (event: SelectChangeEvent) => {
@@ -29,8 +29,6 @@ const Uploadfile = () => {
     // };
 
     const [dropdown, setDropdown] = useState(false)
-    const [dropdownNotification, setDropdownNotification] = useState(false)
-    const [dropdownLanguage, setDropdownLanguage]= useState(false)
     const dropDownF = () => {
       setDropdown(!dropdown)
     }
@@ -38,30 +36,7 @@ const Uploadfile = () => {
 
   return (
     <div>
-              {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <span>NEW</span>
-        <Select
-        //   labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={age}
-          onChange={handleChange}
-          label="Age"
-        >
-
-
-          <MenuItem value={10}> </MenuItem>
-          <MenuItem value={20}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-          <MenuItem value={30}></MenuItem>
-
-
-        </Select>
-      </FormControl> */}
+   
 
       <div className='sign-out relative z-50'>
 <div onClick={dropDownF} className='flex justify-center items-center bg-green-600 text-center rounded-md p-4 cursor-pointer'>
@@ -111,4 +86,4 @@ const Uploadfile = () => {
   )
 }
 
-export default Uploadfile
+export default New

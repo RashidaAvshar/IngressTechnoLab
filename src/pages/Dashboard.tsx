@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect,useRef} from 'react'
 import logo from '../image/alfresco-logo-flower.png'
 import Content from '../components/Content'
 import {useState} from 'react'
@@ -6,12 +6,10 @@ import axios from 'axios'
 import { useCookies } from 'react-cookie';
 
 
-
-
-
-
-
 const Dashboard = () => {
+
+  const dropdownRef = useRef(null)
+
   const [dropdown, setDropdown] = useState(false)
   const [dropdownNotification, setDropdownNotification] = useState(false)
   const [dropdownLanguage, setDropdownLanguage]= useState(false)
@@ -21,7 +19,6 @@ const Dashboard = () => {
   const dropDownLanguagesF = () => {
     setDropdownLanguage(!dropdownLanguage)
   }
-
   const dropDownNotificationF = () => {
     setDropdownNotification(!dropdownNotification)
   }
@@ -35,8 +32,22 @@ const Dashboard = () => {
     .catch(error=>{
       removeCookie('ingressUser')
     })
-    
 }
+
+document.addEventListener('click',(e:any)=>{
+    if( dropdown){
+      if(!e.target.classList.contains('dropdownSignup')){
+
+        setDropdown(false) 
+      }
+    }
+    if(dropdownNotification){
+      if(!e.target.classList.contains('dropdownNotification')){
+        setDropdownNotification(false)
+      }
+    }
+
+})
 
 
   return (
@@ -57,39 +68,43 @@ const Dashboard = () => {
             </svg>
         </div>
         <input type="search" id="default-search" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required/>
-        <i onClick={dropDownNotificationF} className="fa-solid fa-sort-down text-black absolute right-2.5 bottom-2.5 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"></i>
        
-        <div id="dropdown" className={dropdownNotification? "z-10 hidden   bg-white divide-y divide-gray-100 rounded-lg shadow w-80 dark:bg-gray-700" : "z-10  absolute left-96 bg-white divide-y divide-gray-100 rounded-lg shadow w-80 dark:bg-gray-700"}>
-    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-   
-      <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-        <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Notifications</a>
-      </li>
-      <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-        <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">You have no notifications at this time.</a>
-      </li>
-
-    </ul>
-</div>
+       
+        <i  className="fa-solid fa-sort-down text-black absolute right-2.5 bottom-2.5 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"></i>
     </div>
 </form>
-<i className="fa-solid fa-bell text-xl "></i>
+<div className='relative z-50'>
+<i onClick={dropDownNotificationF} className="dropdownNotification fa-solid fa-bell text-xl  hover:border-2 hover:border-blue-700 p-2 rounded-full "></i>
+<div id="dropdownNotification" className={!dropdownNotification? " hidden" : "z-50  absolute  bg-white divide-y divide-gray-100 rounded-lg shadow w-80 dark:bg-gray-700"}>
+   <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+  
+     <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+       <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Notifications</a>
+     </li>
+     <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+       <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">You have no notifications at this time.</a>
+     </li>
+
+   </ul>
+</div>
+</div>
+
 <div className='flex items-center'>
   <p className='p-2'>React Developer</p>
   <p className='bg-blue-900 text-white rounded-full p-2'>RD</p>
 </div>
 
 <div className='sign-out relative'>
-<i onClick={dropDownF} className="fa-solid fa-ellipsis-vertical cursor-pointer p-3"></i>
+ <i  onClick={dropDownF} className="dropdownSignup fa-solid fa-ellipsis-vertical cursor-pointer p-3"></i>
 
-<div id="dropdown" className={dropdown? "z-10 hidden  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" : "z-10  absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"}>
+<div className={!dropdown? "z-10 hidden  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" : "z-10  absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"}>
     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
     <li className='flex px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
     <i className="fa-solid fa-globe py-3 ml-6"></i>
         <button onClick={dropDownLanguagesF} id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" type="button" className="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Language<svg className="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
   </svg></button>
-          <div id="doubleDropdown" className={dropdownLanguage? "z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" : "z-10 absolute right-44  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"}>
+          <div id="doubleDropdown" className={!dropdownLanguage? "z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700" : "z-10 absolute right-44  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"}>
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="doubleDropdownButton">
               <li>
                 <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">1</a>

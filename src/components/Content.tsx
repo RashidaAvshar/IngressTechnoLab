@@ -10,7 +10,8 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Theme, useTheme } from '@mui/material/styles';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Uploadfile from './Uploadfile';
+import New from './New';
+import axios from 'axios';
 
 
 
@@ -123,16 +124,29 @@ const Content = () => {
       );
     };
     
-    const getF =()=>{
-      fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/authentication/versions/1/tickets', 
-      {method: 'post', 
-      headers: {"Content-Type": "application/json"},
-      body:JSON.stringify({password: "123456",  userId: "react"})})
-    .then (res=>{
-      console.log(res)
-    })
+    // const getF =()=>{
+    //   fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/authentication/versions/1/tickets', 
+    //   {method: 'post', 
+    //   headers: {"Content-Type": "application/json"},
+    //   body:JSON.stringify({password: "123456",  userId: "react"})})
+    // .then (res=>{
+    //   console.log(res)
+    // })
 
-    }
+    // }
+
+  const personalFilesF = async ()=>{
+    axios.post('https://310-iwj-963.mktoresp.com/webevents/visitWebPage?_mchNc=1699114231096&_mchCn=&_mchId=310-IWJ-963&_mchTk=_mch-alfresco.com-1699022048353-22480&_mchHo=1curd3ms.trials.alfresco.com&_mchPo=&_mchRu=%2F&_mchPc=https%3A&_mchVr=163&_mchEcid=&_mchHa=%23%2Fpersonal-files&_mchRe=&_mchQp=')
+    .then(res=>console.log(res))
+    .catch(error=>console.log(error))
+  //   fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/discovery',{
+  //     method: 'get',
+  //     headers: {"Content-Type": "application/json"},
+  //   })
+  //   .then(res=>res.json())
+  //   .then(res=>console.log(res))
+  //   .catch(error=>console.log(error))
+  }
 
 
 
@@ -140,7 +154,7 @@ const Content = () => {
     <div className='flex flex-row w-full overflow-x-hidden'>
       <div className='left-section bg-gray-100 w-96'>
         <div className='header h-16 bg-gray-100 p-2'>
-          <Uploadfile/>
+          <New/>
       
 
 <div>
@@ -154,7 +168,7 @@ const Content = () => {
     <div className='botton flex flex-col mt-8 [&>*]:py-3'>
     <div className='ml-10'>
     <i className="fa-solid fa-folder w-8"></i>
-    <span>Personal Files</span>
+    <span onClick={personalFilesF}>Personal Files</span>
     </div>
       <Accordion sx={{padding: 0,}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
@@ -202,7 +216,7 @@ const Content = () => {
 
 
       <div className='right-section w-full overflow-x-scroll'>
-        <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold' onClick={getF}>
+        <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold' >
         Personal Files
         </div>
         <div style={{ height: 'full', width: '100%' }}>
