@@ -1,7 +1,5 @@
 import React from 'react'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
@@ -11,44 +9,11 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Theme, useTheme } from '@mui/material/styles';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { green } from '@mui/material/colors';
-import { BorderClear } from '@mui/icons-material';
+import Uploadfile from './Uploadfile';
 
-const ITEM_HEIGHT = 100;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 6 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
-const names = [
-  'Upload File',
-  'Upload Folder',
-  'Word Document',
-  'Powerpoint Presentation',
-  'Excel Spreadsheet',
-  'Create Folder',
-  'Create Library',
-  'Create file from template',
-  'Create folder from template',
-];
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 
 const Accordion = styled((props: AccordionProps) => (
@@ -89,20 +54,19 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'firstName', headerName: 'Name', width: 510 },
+    { field: 'firstName', headerName: 'Name', width: 300 },
     {
       field: 'size',
       headerName: 'Size',
       type: 'number',
-      width: 120,
+      // width: 120,
     },
     {
       field: 'modified',
       headerName: 'Modified',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 140,
+      // width: 140,
       valueGetter: (params: GridValueGetterParams) =>
         `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
@@ -138,6 +102,7 @@ const columns: GridColDef[] = [
 
   
 const Content = () => {
+
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
   const handleChange =
@@ -157,43 +122,27 @@ const Content = () => {
         typeof value === 'string' ? value.split(',') : value,
       );
     };
+    
+    const getF =()=>{
+      fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/authentication/versions/1/tickets', 
+      {method: 'post', 
+      headers: {"Content-Type": "application/json"},
+      body:JSON.stringify({password: "123456",  userId: "react"})})
+    .then (res=>{
+      console.log(res)
+    })
+
+    }
+
+
 
   return (
     <div className='flex flex-row w-full overflow-x-hidden'>
-      <div className='left-section bg-gray-100'>
+      <div className='left-section bg-gray-100 w-96'>
         <div className='header h-16 bg-gray-100 p-2'>
+          <Uploadfile/>
       
-<FormControl sx={{ m: 1, width: 300, mt: 3, backgroundColor:'green' }}>
-        <Select
-          multiple
-          displayEmpty
-          value={personName}
-          onChange={handleChange1}
-          input={<OutlinedInput />}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return (
-              <div className='text-center text-white font-bold text-xl '>NEW</div>
-              )
-            }
 
-            return selected.join(', ');
-          }}
-          MenuProps={MenuProps}
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-       
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
 <div>
       
     </div>
@@ -253,7 +202,7 @@ const Content = () => {
 
 
       <div className='right-section w-full overflow-x-scroll'>
-        <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold'>
+        <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold' onClick={getF}>
         Personal Files
         </div>
         <div style={{ height: 'full', width: '100%' }}>
@@ -262,7 +211,7 @@ const Content = () => {
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 25 },
           },
         }}
         pageSizeOptions={[5, 10]}

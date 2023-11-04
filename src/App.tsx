@@ -1,20 +1,30 @@
 import React from 'react';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import { CookiesProvider,useCookies } from 'react-cookie';
+import path from 'path';
 
 function App() {
+
+  const handleLogin=(user:string)=>{
+    setCookie("ingressUser", user, {path: "/"} )
+  }
+
+  const [cookie,setCookie] = useCookies(['ingressUser'])
   return (
-    <div className="App">
+  <CookiesProvider>
+      <div className="App">
       {
-        true?
+        cookie.ingressUser?
         <Dashboard  />
         
         :
-        <Login/>
+        <Login onLogin = {handleLogin}/>
         
       }
    
     </div>
+  </CookiesProvider>
   );
 }
 
