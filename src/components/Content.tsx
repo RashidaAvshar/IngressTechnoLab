@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useLayoutEffect,useEffect} from 'react'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
@@ -18,6 +18,9 @@ import axios from 'axios';
 
 
 const Accordion = styled((props: AccordionProps) => (
+
+
+
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -55,7 +58,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 
 const columns: GridColDef[] = [
-    { field: 'firstName', headerName: 'Name', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
     {
       field: 'size',
       headerName: 'Size',
@@ -63,22 +66,22 @@ const columns: GridColDef[] = [
       // width: 120,
     },
     {
-      field: 'modified',
-      headerName: 'Modified',
+      field: 'modifiedAt',
+      headerName: 'ModifiedAt',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       // width: 140,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      // valueGetter: (params: GridValueGetterParams) =>
+      //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
     {
-      field: 'modifiedby',
+      field: 'modifiedByUser',
       headerName: 'Modified by',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       width: 140,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      // valueGetter: (params: GridValueGetterParams) =>
+      //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
     {
       field: 'security',
@@ -104,6 +107,16 @@ const columns: GridColDef[] = [
   
 const Content = () => {
 
+  
+const [data,setData] = useState<Object[]>([])
+const [showDetails, setShowDetails] = useState(false)
+const [clickedRow,setClickedRow] = useState({
+  id: '',
+  name:'',
+  modifiedAt:'',
+  modifiedByUser:''
+})
+
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
   const handleChange =
@@ -124,30 +137,58 @@ const Content = () => {
       );
     };
     
-    // const getF =()=>{
-    //   fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/authentication/versions/1/tickets', 
-    //   {method: 'post', 
-    //   headers: {"Content-Type": "application/json"},
-    //   body:JSON.stringify({password: "123456",  userId: "react"})})
-    // .then (res=>{
-    //   console.log(res)
-    // })
 
-    // }
 
   const personalFilesF = async ()=>{
-    axios.post('https://310-iwj-963.mktoresp.com/webevents/visitWebPage?_mchNc=1699114231096&_mchCn=&_mchId=310-IWJ-963&_mchTk=_mch-alfresco.com-1699022048353-22480&_mchHo=1curd3ms.trials.alfresco.com&_mchPo=&_mchRu=%2F&_mchPc=https%3A&_mchVr=163&_mchEcid=&_mchHa=%23%2Fpersonal-files&_mchRe=&_mchQp=')
-    .then(res=>console.log(res))
+    await axios.get('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/alfresco/versions/1/nodes/382b3102-ffba-422e-8711-d7f330fb5468/children?maxItems=25&orderBy=isFolder%20desc%2Cname%20ASC&include=path%2Cproperties%2CallowableOperations%2Cpermissions%2CaspectNames%2CisFavorite%2Cdefinition&includeSource=true',  {
+       withCredentials: true,
+       
+       headers:{
+        Authorization: 'Basic Uk9MRV9USUNLRVQ6VElDS0VUXzBlZmEyMzVjZWFhM2UzNTM1ZDg0YWVkZmFiNjQ0ZjZlOTQwYzc0YzM=',
+        'Content-Type': 'application/json',
+        
+      } 
+      },)
+      .then(res=>res.data.list.entries)
+    .then(res=>{
+
+    if(res instanceof Array){
+      res.forEach((value, index)=>{
+        
+        setData(prev=>[...prev,{
+          
+          id:index,
+          name:value.entry.name,
+          size: 0,
+          modifiedAt:value.entry.modifiedAt,
+          modifiedByUser:value.entry.modifiedByUser.displayName }])
+      })
+    }
+
+      return res
+    })
+    // .then(res=>console.log(data))
     .catch(error=>console.log(error))
-  //   fetch('https://1curd3ms.trials.alfresco.com/alfresco/api/discovery',{
-  //     method: 'get',
-  //     headers: {"Content-Type": "application/json"},
-  //   })
-  //   .then(res=>res.json())
-  //   .then(res=>console.log(res))
-  //   .catch(error=>console.log(error))
+  
   }
 
+
+  const rowdoubleclickF = (e:any)=>{
+    console.log(e.row)
+    setClickedRow({
+      id:e.row.id,
+      name: e.row.name,
+      modifiedAt:e.row.modifiedat,
+      modifiedByUser:e.row.modifiedByUser
+    })
+    
+    setShowDetails(true)
+  }
+
+
+  useLayoutEffect(()=>{
+personalFilesF()
+  },[])
 
 
   return (
@@ -215,14 +256,27 @@ const Content = () => {
 
 
 
-      <div className='right-section w-full overflow-x-scroll'>
+      <div className='right-section w-full overflow-x-scroll relative'>
+        <div className={showDetails? 'absolute z-50 top-0 left-0 w-full h-96 bg-white':'hidden'}>
+          <div className='flex justify-end text-3xl'>
+          <i onClick={()=>setShowDetails(false)} className="fa-solid fa-xmark"></i>
+          </div>
+
+          <ul>
+            <li className='flex justify-between'><span>ID</span><span>{clickedRow.id}</span></li>
+            <li className='flex justify-between'><span>Name</span><span>{clickedRow.name}</span></li>
+            <li className='flex justify-between'><span>Modified</span><span>{clickedRow.modifiedAt}</span></li>
+            <li className='flex justify-between'><span>Modified By</span><span>{clickedRow.modifiedByUser}</span></li>
+          </ul>
+        </div>
         <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold' >
         Personal Files
         </div>
         <div style={{ height: 'full', width: '100%' }}>
         <DataGrid
-        rows={rows}
+        rows={data}
         columns={columns}
+        onRowDoubleClick={rowdoubleclickF}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 25 },
