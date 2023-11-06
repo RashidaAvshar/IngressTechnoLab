@@ -108,6 +108,7 @@ const columns: GridColDef[] = [
 const Content = () => {
 
   
+  const [fileList, setFileList] = useState<any[]>([])
 const [data,setData] = useState<Object[]>([])
 const [showDetails, setShowDetails] = useState(false)
 const [clickedRow,setClickedRow] = useState({
@@ -127,75 +128,65 @@ const [clickedRow,setClickedRow] = useState({
     const theme = useTheme();
     const [personName, setPersonName] = React.useState<string[]>([]);
   
-    const handleChange1 = (event: SelectChangeEvent<typeof personName>) => {
-      const {
-        target: { value },
-      } = event;
-      setPersonName(
-        // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
-      );
-    };
-    
+   
 
-
-  const personalFilesF = async ()=>{
-    await axios.get('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/alfresco/versions/1/nodes/382b3102-ffba-422e-8711-d7f330fb5468/children?maxItems=25&orderBy=isFolder%20desc%2Cname%20ASC&include=path%2Cproperties%2CallowableOperations%2Cpermissions%2CaspectNames%2CisFavorite%2Cdefinition&includeSource=true',  {
-       withCredentials: true,
+///////////////////////////////////////////////////////////-----------------API-----------------///////////////////////////////////////////////////////////
+//   const personalFilesF = async ()=>{
+//     await axios.get('https://1curd3ms.trials.alfresco.com/alfresco/api/-default-/public/alfresco/versions/1/nodes/382b3102-ffba-422e-8711-d7f330fb5468/children?maxItems=25&orderBy=isFolder%20desc%2Cname%20ASC&include=path%2Cproperties%2CallowableOperations%2Cpermissions%2CaspectNames%2CisFavorite%2Cdefinition&includeSource=true',  {
+//        withCredentials: true,
        
-       headers:{
-        Authorization: 'Basic Uk9MRV9USUNLRVQ6VElDS0VUXzBlZmEyMzVjZWFhM2UzNTM1ZDg0YWVkZmFiNjQ0ZjZlOTQwYzc0YzM=',
-        'Content-Type': 'application/json',
+//        headers:{
+//         Authorization: 'Basic Uk9MRV9USUNLRVQ6VElDS0VUXzU3ZGNlOWY4YjFkNGU2MWZhMDk1ZDc0ZWVmYzRkMWQ0YWZjOWNlYjY=',
+//         'Content-Type': 'application/json',
         
-      } 
-      },)
-      .then(res=>res.data.list.entries)
-    .then(res=>{
+//       } 
+//       },)
+//       .then(res=>res.data.list.entries)
+//     .then(res=>{
 
-    if(res instanceof Array){
-      res.forEach((value, index)=>{
+//     if(res instanceof Array){
+//       res.forEach((value, index)=>{
         
-        setData(prev=>[...prev,{
+//         setData(prev=>[...prev,{
           
-          id:index,
-          name:value.entry.name,
-          size: 0,
-          modifiedAt:value.entry.modifiedAt,
-          modifiedByUser:value.entry.modifiedByUser.displayName }])
-      })
-    }
+//           id:index,
+//           name:value.entry.name,
+//           size: 0,
+//           modifiedAt:value.entry.modifiedAt,
+//           modifiedByUser:value.entry.modifiedByUser.displayName }])
+//       })
+//     }
 
-      return res
-    })
-    // .then(res=>console.log(data))
-    .catch(error=>console.log(error))
+//       return res
+//     })
+//     // .then(res=>console.log(data))
+//     .catch(error=>console.log(error))
   
-  }
+//   }
 
-
-  const rowdoubleclickF = (e:any)=>{
-    console.log(e.row)
-    setClickedRow({
-      id:e.row.id,
-      name: e.row.name,
-      modifiedAt:e.row.modifiedat,
-      modifiedByUser:e.row.modifiedByUser
-    })
+//   const rowdoubleclickF = (e:any)=>{
+//     console.log(e.row)
+//     setClickedRow({
+//       id:e.row.id,
+//       name: e.row.name,
+//       modifiedAt:e.row.modifiedat,
+//       modifiedByUser:e.row.modifiedByUser
+//     })
     
-    setShowDetails(true)
-  }
+//     setShowDetails(true)
+//   }
+
+//   useLayoutEffect(()=>{
+// personalFilesF()
+//   },[])
 
 
-  useLayoutEffect(()=>{
-personalFilesF()
-  },[])
-
-
+////////////////////////////////////////////////////////////// ------------------------API ------------------------//////////////////////////////////////////////////////////
   return (
     <div className='flex flex-row w-full overflow-x-hidden'>
       <div className='left-section bg-gray-100 w-96'>
         <div className='header h-16 bg-gray-100 p-2'>
-          <New/>
+          <New setFileList={setFileList}/>
       
 
 <div>
@@ -205,11 +196,14 @@ personalFilesF()
 
         </div>
 
+
+
+
    
     <div className='botton flex flex-col mt-8 [&>*]:py-3'>
     <div className='ml-10'>
     <i className="fa-solid fa-folder w-8"></i>
-    <span onClick={personalFilesF}>Personal Files</span>
+    <span>Personal Files</span>
     </div>
       <Accordion sx={{padding: 0,}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
@@ -257,35 +251,78 @@ personalFilesF()
 
 
       <div className='right-section w-full overflow-x-scroll relative'>
-        <div className={showDetails? 'absolute z-50 top-0 left-0 w-full h-96 bg-white':'hidden'}>
-          <div className='flex justify-end text-3xl'>
-          <i onClick={()=>setShowDetails(false)} className="fa-solid fa-xmark"></i>
-          </div>
 
-          <ul>
-            <li className='flex justify-between'><span>ID</span><span>{clickedRow.id}</span></li>
-            <li className='flex justify-between'><span>Name</span><span>{clickedRow.name}</span></li>
-            <li className='flex justify-between'><span>Modified</span><span>{clickedRow.modifiedAt}</span></li>
-            <li className='flex justify-between'><span>Modified By</span><span>{clickedRow.modifiedByUser}</span></li>
-          </ul>
-        </div>
+
+
+
+      
+
+
         <div className='header h-20 w-full bg-gray-100 pt-8 pl-4 text-xl font-bold' >
         Personal Files
         </div>
-        <div style={{ height: 'full', width: '100%' }}>
-        <DataGrid
-        rows={data}
-        columns={columns}
-        onRowDoubleClick={rowdoubleclickF}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 25 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-      />
-    </div>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" className="px-6 py-3">
+                    icon
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Size
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Modified
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Modified by
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    security Marks
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+          {
+         fileList?
+         fileList.map((value, index)=>(
+          <tr key={index}>
+            <td>&#128193;</td>
+            <td>{value.title}</td>
+            <td>{value.name}</td>
+            <td>{value.description}</td>
+          </tr>
+        ))
+        :
+        null
+          }
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    
+                </th>
+                <td className="px-6 py-4">
+                    
+                </td>
+                <td className="px-6 py-4">
+                    
+                </td>
+                <td className="px-6 py-4">
+                    
+                </td>
+                <td className="px-6 py-4">
+                    
+                </td>               
+                 <td className="px-6 py-4">
+                    
+                 </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
       </div>
 
