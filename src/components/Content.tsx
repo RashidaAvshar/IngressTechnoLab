@@ -266,23 +266,18 @@ const [clickedRow,setClickedRow] = useState({
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" className="px-6 py-3">
-                    icon
+                    
                 </th>
                 <th scope="col" className="px-6 py-3">
                     Name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Size
+                    Title
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Modified
+                    Description
                 </th>
-                <th scope="col" className="px-6 py-3">
-                    Modified by
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    security Marks
-                </th>
+
             </tr>
         </thead>
         <tbody>
@@ -290,7 +285,10 @@ const [clickedRow,setClickedRow] = useState({
           {
          fileList?
          fileList.map((value, index)=>(
-          <tr key={index}>
+          <tr key={index} className=''>
+{/* <i className="fa-regular fa-file-word"></i>
+<i className="fa-regular fa-file-excel"></i> */}
+
             <td>&#128193;</td>
             <td>{value.title}</td>
             <td>{value.name}</td>
@@ -313,12 +311,6 @@ const [clickedRow,setClickedRow] = useState({
                 <td className="px-6 py-4">
                     
                 </td>
-                <td className="px-6 py-4">
-                    
-                </td>               
-                 <td className="px-6 py-4">
-                    
-                 </td>
             </tr>
         </tbody>
     </table>
