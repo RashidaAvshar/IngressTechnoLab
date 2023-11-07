@@ -264,7 +264,7 @@ const [clickedRow,setClickedRow] = useState({
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
+            <tr className='text-base'>
                 <th scope="col" className="px-6 py-3">
                     
                 </th>
@@ -277,7 +277,6 @@ const [clickedRow,setClickedRow] = useState({
                 <th scope="col" className="px-6 py-3">
                     Description
                 </th>
-
             </tr>
         </thead>
         <tbody>
@@ -288,7 +287,6 @@ const [clickedRow,setClickedRow] = useState({
           <tr key={index} className=''>
 {/* <i className="fa-regular fa-file-word"></i>
 <i className="fa-regular fa-file-excel"></i> */}
-
             <td>&#128193;</td>
             <td>{value.title}</td>
             <td>{value.name}</td>

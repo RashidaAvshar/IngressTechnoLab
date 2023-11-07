@@ -21,8 +21,31 @@ const New = ({...props}) => {
       title: '',
       description: ''
     })
+    const [fileData, setFileData] =  useState({
+      name: '',
+      title: '',
+      description: ''
+    })
     const dropDownF = () => {
       setDropdown(!dropdown)
+    }
+
+    const uploadFile = async(e:any)=>{
+      return new Promise((resolve, reject)=>{
+        const files=e.target.files
+      if(files.length>0){
+        setFileData({
+          name: e.target.files[0].name,
+          title: e.target.files[0].size,
+          description: e.target.files[0].type,
+        })
+        resolve(e.target.files[0])
+
+        setFileList((prev:any)=>([...prev,e.target.files[0]]))
+        console.log(e.target.files[0])
+
+      }
+      })
     }
 
     useEffect(()=>{
@@ -31,7 +54,7 @@ const New = ({...props}) => {
         setNewFolderPopup(false)
       }
 
-    },[createFolder])
+    },[createFolder,fileData])
     
   return (
     <div>
@@ -44,9 +67,13 @@ const New = ({...props}) => {
 
 <div id="dropdown" className={dropdown? "z-50   bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700" : "hidden"}>
     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-      <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-        <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Upload File</a>
-      </li>
+      <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'> 
+
+<label htmlFor="upload" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full h-full">Upload File
+<input type="file" id='upload' onChange={uploadFile} className='hidden' />
+ 
+  </label>      
+  </li>
 
       <li className='flex  px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
         <a href="#"  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Word Document</a>
